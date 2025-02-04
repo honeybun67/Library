@@ -1,5 +1,7 @@
 using Library.Data;
 using Library.Data.Models;
+using Library.Services;
+using Library.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +32,7 @@ namespace Library
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddTransient<IUsersService, UsersService>();
 
             var app = builder.Build();
 
