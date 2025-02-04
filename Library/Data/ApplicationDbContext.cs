@@ -11,6 +11,11 @@ namespace Library.Data
             : base(options)
         {
         }
+        public ApplicationDbContext() { }
+
+        public DbSet<Author> Authors { get; set; }
+
+        public DbSet<BookReating> Ratings { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

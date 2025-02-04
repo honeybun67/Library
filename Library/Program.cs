@@ -32,7 +32,10 @@ namespace Library
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            //Register services
             builder.Services.AddTransient<IUsersService, UsersService>();
+            builder.Services.AddTransient<IAuthorsService, AuthorService>();
 
             var app = builder.Build();
 

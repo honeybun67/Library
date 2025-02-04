@@ -6,8 +6,13 @@ namespace Library.Data.Models
     public class User:IdentityUser
     {
         public string FirstName { get; set; }
+
         public string LastName { get; set; }
+
         public string Email { get; set; }
+
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; } = new HashSet<IdentityUserRole<string>>();
+
+        public virtual ICollection<BookReating> Ratings { get; set; } = new HashSet<BookReating>();
     }
 }
