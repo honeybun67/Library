@@ -2,6 +2,7 @@
 using Library.Data.Models;
 using Library.Services.Contracts;
 using Library.ViewModels.Authors;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Services
 {
@@ -28,6 +29,46 @@ namespace Library.Services
 
             return author.Id;
         }
+
+        public async Task<IndexAuthorsViewModel> GetAuthorsAsync(IndexAuthorsViewModel model)
+        {
+            if (model == null)
+            {
+                model = new IndexAuthorsViewModel(10);
+            }
+            IQueryable<Author> dataAuthors = context.Authors;
+
+            if (string.IsNullOrWhiteSpace(model.FilterByName))
+            {
+                dataAuthors = dataAuthors.Where
+                    (x => x.Name.Contains(model.FilterByName));
+            }
+
+            if (model.IsAsc)
+            {
+                model.IsAsc = false;
+                dataAuthors.OrderByDescending(x => x.Name);
+            }
+            else
+            {
+                model.IsAsc = true;
+                dataAuthors.OrderBy(x => x.Name);
+            }
+             model.ElementsCount = await dataAuthors.CountAsync();
+
+            model.Authors = await dataAuthors
+                .Skip((model.Page - 1) * model.ItemsPerPage)
+                .Take(model.ItemsPerPage)
+                .Select(x => new IndexAuthorViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image,
+                }).ToListAsync();
+
+            return model;
+        }
+
         private async Task<string> ImageToStringAsync(IFormFile file)
         {
             List<string> imageExtensions = new List<string>() { ".JPG", ".BMP", ".PNG" };

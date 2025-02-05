@@ -9,6 +9,7 @@ using Library.Data;
 using Library.Data.Models;
 using Library.ViewModels.Authors;
 using Library.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Controllers
 {
@@ -24,9 +25,10 @@ namespace Library.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(IndexAuthorsViewModel authors)
         {
-            return View(await _context.Authors.ToListAsync());
+            authors = await authorsService.GetAuthorsAsync(authors);
+            return View(authors);
         }
 
         // GET: Authors/Details/5
@@ -56,6 +58,7 @@ namespace Library.Controllers
         // POST: Authors/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = GlobalConstants.AdminRole)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateAuthorViewModel author)
