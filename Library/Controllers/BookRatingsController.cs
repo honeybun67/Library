@@ -8,23 +8,39 @@ using Microsoft.EntityFrameworkCore;
 using Library.Data;
 using Library.Data.Models;
 using Library.ViewModels.Ratings;
+using Library.Services.Contracts;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Library.ViewModels.BookRatings;
 
 namespace Library.Controllers
 {
+    [Authorize]
     public class BookRatingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IBookRatingsService bookRatingsService;
 
-        public BookRatingsController(ApplicationDbContext context)
+        public BookRatingsController(ApplicationDbContext context, IBookRatingsService bookRatingsService)
         {
             _context = context;
+            this.bookRatingsService = bookRatingsService;
         }
 
         // GET: BookRatings
+        [Authorize(Roles = GlobalConstants.AdminRole)]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Ratings.Include(b => b.Author).Include(b => b.User);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> UserIndex(IndexBookRatingsUserViewModel userBookRatings)
+        {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            userBookRatings = await bookRatingsService.GetUserBookRatingsAsync(userBookRatings, userId);
+
+            return View(userBookRatings);
         }
 
         // GET: BookRatings/Details/5
@@ -64,9 +80,9 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookRating);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                await bookRatingsService.CreateBookRatingAsync(bookRating, userId);
+                return RedirectToAction(nameof(UserIndex));
             }
             return View(bookRating);
         }

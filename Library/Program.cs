@@ -36,6 +36,7 @@ namespace Library
             //Register services
             builder.Services.AddTransient<IUsersService, UsersService>();
             builder.Services.AddTransient<IAuthorsService, AuthorService>();
+            builder.Services.AddTransient<IBookRatingsService, BookRatingService>();
 
             var app = builder.Build();
 
