@@ -18,7 +18,7 @@ namespace Library.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IAuthorsService authorsService;
 
-        public AuthorsController(ApplicationDbContext context,IAuthorsService authorsService)
+        public AuthorsController(ApplicationDbContext context, IAuthorsService authorsService)
         {
             _context = context;
             this.authorsService = authorsService;
@@ -65,8 +65,8 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
-               await authorsService.CreateAuthorAsync(author);
-               return RedirectToAction(nameof(Index));
+                await authorsService.CreateAuthorAsync(author);
+                return RedirectToAction(nameof(Index));
             }
             return View(author);
         }
@@ -78,8 +78,8 @@ namespace Library.Controllers
             {
                 return NotFound();
             }
+            var author = await authorsService.GetAuthorToEditAsync(id);
 
-            var author = await _context.Authors.FindAsync(id);
             if (author == null)
             {
                 return NotFound();
@@ -92,34 +92,14 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description,Image")] Author author)
+        public async Task<IActionResult> Edit(EditAuthorViewModel editAuthor)
         {
-            if (id != author.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(author);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AuthorExists(author.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await authorsService.UpdateAuthorAsync(editAuthor);
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(editAuthor);
         }
 
         // GET: Authors/Delete/5

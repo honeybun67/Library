@@ -15,7 +15,7 @@ namespace Library.Data
 
         public DbSet<Author> Authors { get; set; }
 
-        public DbSet<BookReating> Ratings { get; set; }
+        public DbSet<BookRating> Ratings { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

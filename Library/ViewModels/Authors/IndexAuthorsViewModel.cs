@@ -6,7 +6,7 @@
         {
             
         }
-        public IndexAuthorsViewModel(int elementsCount, int itemsPerPage = 5, string action = "Index") : base(elementsCount, itemsPerPage, action)
+        public IndexAuthorsViewModel(int elementsCount, int itemsPerPage = 10, string action = "Index") : base(elementsCount, itemsPerPage, action)
         {
         }
 

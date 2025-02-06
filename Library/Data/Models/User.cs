@@ -13,6 +13,6 @@ namespace Library.Data.Models
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; } = new HashSet<IdentityUserRole<string>>();
 
-        public virtual ICollection<BookReating> Ratings { get; set; } = new HashSet<BookReating>();
+        public virtual ICollection<BookRating> Ratings { get; set; } = new HashSet<BookRating>();
     }
 }

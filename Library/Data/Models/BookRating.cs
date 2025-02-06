@@ -1,6 +1,6 @@
 ﻿namespace Library.Data.Models
 {
-    public class BookReating
+    public class BookRating
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 

@@ -49,7 +49,7 @@ namespace Library.Data.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("Library.Data.Models.BookReating", b =>
+            modelBuilder.Entity("Library.Data.Models.BookRating", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -289,7 +289,7 @@ namespace Library.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Library.Data.Models.BookReating", b =>
+            modelBuilder.Entity("Library.Data.Models.BookRating", b =>
                 {
                     b.HasOne("Library.Data.Models.Author", "Author")
                         .WithMany("Ratings")

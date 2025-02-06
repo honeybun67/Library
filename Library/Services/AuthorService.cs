@@ -14,7 +14,30 @@ namespace Library.Services
         {
             this.context = context;
         }
+        public async Task<string> UpdateAuthorAsync(EditAuthorViewModel model)
+        {
+            Author? author = await context
+                            .Authors
+                            .FindAsync(model.Id);
+            author.Name = model.Name;
+            author.Description = model.Description;
+            context.Authors.Update(author);
+           await context.SaveChangesAsync();
+            return author.Id;
+        }
+        public async Task<EditAuthorViewModel> GetAuthorToEditAsync(string authorId) 
+        {
+            Author? author =await context
+                .Authors
+                .FindAsync(authorId);
 
+         return new EditAuthorViewModel()
+            {
+                Id = authorId,
+                Name= author.Name,
+                Description = author.Description
+            };             
+        }
         public async Task<string> CreateAuthorAsync(CreateAuthorViewModel model) 
         {
             Author author = new Author()
@@ -38,7 +61,7 @@ namespace Library.Services
             }
             IQueryable<Author> dataAuthors = context.Authors;
 
-            if (string.IsNullOrWhiteSpace(model.FilterByName))
+            if (!string.IsNullOrWhiteSpace(model.FilterByName))
             {
                 dataAuthors = dataAuthors.Where
                     (x => x.Name.Contains(model.FilterByName));
