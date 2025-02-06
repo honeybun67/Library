@@ -28,7 +28,7 @@
                 }
                 <a asp-all-route-data="routs">Full name</a>
             </th>
-          {P}icture
+          Picture
             <th></th>
         </tr>
     </thead>
@@ -43,7 +43,7 @@
                     <img src="data:image/png;base64,@Html.DisplayFor(modelItem => author.Image)" width="300" height="200">
                 </td>
                 <td>
-                    <a asp-action="Review" asp-route-id="@author.Id" class="btn btn-sm btn-secondary">Review</a>
+                    <a asp-action="Create" asp-controller="BookRatings" asp-route-authorId="@author.Id" class="btn btn-sm btn-secondary">BookRatings</a>
                     @if (this.User.IsInRole("Admin"))
                     {
                         <a  asp-action="Edit" asp-route-id="@author.Id" class="btn btn-sm btn-secondary">Edit</a>

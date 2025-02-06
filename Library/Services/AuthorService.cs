@@ -27,16 +27,16 @@ namespace Library.Services
         }
         public async Task<EditAuthorViewModel> GetAuthorToEditAsync(string authorId) 
         {
-            Author? author =await context
+            Author? author = await context
                 .Authors
                 .FindAsync(authorId);
 
-         return new EditAuthorViewModel()
-            {
+           return new EditAuthorViewModel()
+           {
                 Id = authorId,
                 Name= author.Name,
                 Description = author.Description
-            };             
+           };             
         }
         public async Task<string> CreateAuthorAsync(CreateAuthorViewModel model) 
         {
