@@ -11,23 +11,23 @@ using Library.ViewModels.Ratings;
 using Library.Services.Contracts;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Library.ViewModels.BookRatings;
+using Library.ViewModels.AuthorRatings;
 
 namespace Library.Controllers
 {
     [Authorize]
-    public class BookRatingsController : Controller
+    public class AuthorRatingsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IBookRatingsService bookRatingsService;
+        private readonly IAuthorRatingsService AuthorRatingsService;
 
-        public BookRatingsController(ApplicationDbContext context, IBookRatingsService bookRatingsService)
+        public AuthorRatingsController(ApplicationDbContext context, IAuthorRatingsService AuthorRatingsService)
         {
             _context = context;
-            this.bookRatingsService = bookRatingsService;
+            this.AuthorRatingsService = AuthorRatingsService;
         }
 
-        // GET: BookRatings
+        // GET: AuthorRatings
         [Authorize(Roles = GlobalConstants.AdminRole)]
         public async Task<IActionResult> Index()
         {
@@ -35,15 +35,15 @@ namespace Library.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public async Task<IActionResult> UserIndex(IndexBookRatingsUserViewModel userBookRatings)
+        public async Task<IActionResult> UserIndex(IndexAuthorRatingsUserViewModel userAuthorRatings)
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            userBookRatings = await bookRatingsService.GetUserBookRatingsAsync(userBookRatings, userId);
+            userAuthorRatings = await AuthorRatingsService.GetUserAuthorRatingsAsync(userAuthorRatings, userId);
 
-            return View(userBookRatings);
+            return View(userAuthorRatings);
         }
 
-        // GET: BookRatings/Details/5
+        // GET: AuthorRatings/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -51,43 +51,43 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var bookRating = await _context.Ratings
+            var AuthorRating = await _context.Ratings
                 .Include(b => b.Author)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookRating == null)
+            if (AuthorRating == null)
             {
                 return NotFound();
             }
 
-            return View(bookRating);
+            return View(AuthorRating);
         }
 
-        // GET: BookRatings/Create
+        // GET: AuthorRatings/Create
         public IActionResult Create(string authorId)
         {
-            CreateBookRatingViewModel model = new CreateBookRatingViewModel();
+            CreateAuthorRatingViewModel model = new CreateAuthorRatingViewModel();
             model.AuthorId = authorId;
             return View(model);
         }
 
-        // POST: BookRatings/Create
+        // POST: AuthorRatings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBookRatingViewModel bookRating)
+        public async Task<IActionResult> Create(CreateAuthorRatingViewModel AuthorRating)
         {
             if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                await bookRatingsService.CreateBookRatingAsync(bookRating, userId);
+                await AuthorRatingsService.CreateAuthorRatingAsync(AuthorRating, userId);
                 return RedirectToAction(nameof(UserIndex));
             }
-            return View(bookRating);
+            return View(AuthorRating);
         }
 
-        // GET: BookRatings/Edit/5
+        // GET: AuthorRatings/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -95,24 +95,24 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var bookRating = await _context.Ratings.FindAsync(id);
-            if (bookRating == null)
+            var AuthorRating = await _context.Ratings.FindAsync(id);
+            if (AuthorRating == null)
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookRating.AuthorId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", bookRating.UserId);
-            return View(bookRating);
+            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", AuthorRating.AuthorId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", AuthorRating.UserId);
+            return View(AuthorRating);
         }
 
-        // POST: BookRatings/Edit/5
+        // POST: AuthorRatings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,UserId,AuthorId,Rating,Review")] BookRating bookRating)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,UserId,AuthorId,Rating,Review")] AuthorRating AuthorRating)
         {
-            if (id != bookRating.Id)
+            if (id != AuthorRating.Id)
             {
                 return NotFound();
             }
@@ -121,12 +121,12 @@ namespace Library.Controllers
             {
                 try
                 {
-                    _context.Update(bookRating);
+                    _context.Update(AuthorRating);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookRatingExists(bookRating.Id))
+                    if (!AuthorRatingExists(AuthorRating.Id))
                     {
                         return NotFound();
                     }
@@ -137,12 +137,12 @@ namespace Library.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookRating.AuthorId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", bookRating.UserId);
-            return View(bookRating);
+            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", AuthorRating.AuthorId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", AuthorRating.UserId);
+            return View(AuthorRating);
         }
 
-        // GET: BookRatings/Delete/5
+        // GET: AuthorRatings/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -150,34 +150,34 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var bookRating = await _context.Ratings
+            var AuthorRating = await _context.Ratings
                 .Include(b => b.Author)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookRating == null)
+            if (AuthorRating == null)
             {
                 return NotFound();
             }
 
-            return View(bookRating);
+            return View(AuthorRating);
         }
 
-        // POST: BookRatings/Delete/5
+        // POST: AuthorRatings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var bookRating = await _context.Ratings.FindAsync(id);
-            if (bookRating != null)
+            var AuthorRating = await _context.Ratings.FindAsync(id);
+            if (AuthorRating != null)
             {
-                _context.Ratings.Remove(bookRating);
+                _context.Ratings.Remove(AuthorRating);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookRatingExists(string id)
+        private bool AuthorRatingExists(string id)
         {
             return _context.Ratings.Any(e => e.Id == id);
         }

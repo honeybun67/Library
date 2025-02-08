@@ -1,4 +1,4 @@
-﻿@model IndexBookRatingsUserViewModel
+﻿@model IndexAuthorRatingsUserViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.UserBookRatings)
+        @foreach (var item in Model.UserAuthorRatings)
         {
             <tr>
                 <td>
@@ -36,9 +36,9 @@
                     @Html.DisplayFor(modelItem => item.Review)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookRatingId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BookRatingId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BookRatingId">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.AuthorRatingId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.AuthorRatingId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.AuthorRatingId">Delete</a>
                 </td>
             </tr>
         }

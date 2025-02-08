@@ -2,91 +2,98 @@
 using Library.Data.Models;
 using Library.Services.Contracts;
 using Library.ViewModels.Authors;
+using Library.ViewModels.Books;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Services
 {
-    public class AuthorService:IAuthorsService
+    public class BooksService:IBooksService
     {
         private readonly ApplicationDbContext context;
 
-        public AuthorService(ApplicationDbContext context)
+        public BooksService(ApplicationDbContext context)
         {
             this.context = context;
         }
-        public async Task<string> UpdateAuthorAsync(EditAuthorViewModel model)
+
+        public async Task<string> UpdateBookAsync(EditBookViewModel model)
         {
-            Author? author = await context
-                            .Authors
+            Book? book = await context
+                            .Books
                             .FindAsync(model.Id);
-            author.Name = model.Name;
-            author.Description = model.Description;
-            context.Authors.Update(author);
-           await context.SaveChangesAsync();
-            return author.Id;
-        }
+            book.Title = model.Title;
+            book.Description = model.Description;
 
-        public async Task<EditAuthorViewModel> GetAuthorToEditAsync(string authorId) 
-        {
-            Author? author = await context
-                .Authors
-                .FindAsync(authorId);
-
-           return new EditAuthorViewModel()
-           {
-                Id = authorId,
-                Name= author.Name,
-                Description = author.Description
-           };             
-        }
-        public async Task<string> CreateAuthorAsync(CreateAuthorViewModel model) 
-        {
-            Author author = new Author()
-            { 
-                Name = model.Name,
-                Description = model.Description,
-                Image = await ImageToStringAsync(model.ImageFile)
-            
-            };
-            await context.Authors.AddAsync(author);
+            context.Books.Update(book);
             await context.SaveChangesAsync();
 
-            return author.Id;
+            return book.Id;
         }
 
-        public async Task<IndexAuthorsViewModel> GetAuthorsAsync(IndexAuthorsViewModel model)
+        public async Task<EditBookViewModel> GetBookToEditAsync(string bookId)
+        {
+            Book? book = await context
+                .Books
+                .FindAsync(bookId);
+
+            return new EditBookViewModel()
+            {
+                Id = bookId,
+                Title = book.Title,
+                Description = book.Description
+            };
+        }
+
+
+        public async Task<string> CreateBookAsync(CreateBookViewModel model)
+        {
+            Book book = new Book()
+            {
+                Title = model.Title,
+                Description = model.Description,
+                Image = await ImageToStringAsync(model.ImageFile)
+
+            };
+            await context.Books.AddAsync(book);
+            await context.SaveChangesAsync();
+
+            return book.Id;
+
+           
+        }
+        public async Task<IndexBooksViewModel> GetBooksAsync(IndexBooksViewModel model)
         {
             if (model == null)
             {
-                model = new IndexAuthorsViewModel(10);
+                model = new IndexBooksViewModel(10);
             }
-            IQueryable<Author> dataAuthors = context.Authors;
+            IQueryable<Book> dataBooks = context.Books;
 
-            if (!string.IsNullOrWhiteSpace(model.FilterByName))
+            if (!string.IsNullOrWhiteSpace(model.FilterByTitle))
             {
-                dataAuthors = dataAuthors.Where
-                    (x => x.Name.Contains(model.FilterByName));
+                dataBooks = dataBooks.Where
+                    (x => x.Title.Contains(model.FilterByTitle));
             }
 
             if (model.IsAsc)
             {
                 model.IsAsc = false;
-                dataAuthors.OrderByDescending(x => x.Name);
+                dataBooks.OrderByDescending(x => x.Title);
             }
             else
             {
                 model.IsAsc = true;
-                dataAuthors.OrderBy(x => x.Name);
+                dataBooks.OrderBy(x => x.Title);
             }
-             model.ElementsCount = await dataAuthors.CountAsync();
+            model.ElementsCount = await dataBooks.CountAsync();
 
-            model.Authors = await dataAuthors
+            model.Books = await dataBooks
                 .Skip((model.Page - 1) * model.ItemsPerPage)
                 .Take(model.ItemsPerPage)
-                .Select(x => new IndexAuthorViewModel()
+                .Select(x => new IndexBookViewModel()
                 {
                     Id = x.Id,
-                    Name = x.Name,
+                    Title = x.Title,
                     Image = x.Image,
                 }).ToListAsync();
 
@@ -112,5 +119,7 @@ namespace Library.Services
             }
             return null;
         }
+
+
     }
 }

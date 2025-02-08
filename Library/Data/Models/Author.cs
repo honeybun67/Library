@@ -13,7 +13,7 @@ namespace Library.Data.Models
 
         public string Image { get; set; }
 
-        public virtual ICollection<BookRating> Ratings { get; set; } = new HashSet<BookRating>();
+        public virtual ICollection<AuthorRating> Ratings { get; set; } = new HashSet<AuthorRating>();
 
     }
 }

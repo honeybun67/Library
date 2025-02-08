@@ -1,10 +1,10 @@
-﻿namespace Library.ViewModels.BookRatings
+﻿namespace Library.ViewModels.AuthorRatings
 {
-    public class IndexBookRatingViewModel
+    public class IndexAuthorRatingViewModel
     {
         public string UserId { get; set; }
 
-        public string BookRatingId { get; set; }
+        public string AuthorRatingId { get; set; }
 
         public string AuthorName { get; set; }
 

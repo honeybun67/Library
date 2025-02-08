@@ -1,6 +1,6 @@
 ﻿namespace Library.ViewModels.Ratings
 {
-    public class CreateBookRatingViewModel
+    public class CreateAuthorRatingViewModel
     {
         public string AuthorId { get; set; }
 

@@ -2,23 +2,23 @@
 using Library.Data.Models;
 using Library.Services.Contracts;
 using Library.ViewModels.Authors;
-using Library.ViewModels.BookRatings;
+using Library.ViewModels.AuthorRatings;
 using Library.ViewModels.Ratings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Services
 {
-    public class BookRatingService:IBookRatingsService
+    public class AuthorRatingService:IAuthorRatingsService
     {
         private readonly ApplicationDbContext context;
 
-        public BookRatingService(ApplicationDbContext context)
+        public AuthorRatingService(ApplicationDbContext context)
         {
             this.context = context;
         }
-        public async Task<string> CreateBookRatingAsync(CreateBookRatingViewModel model, string userId)
+        public async Task<string> CreateAuthorRatingAsync(CreateAuthorRatingViewModel model, string userId)
         {
-            BookRating bookRating = new BookRating()
+            AuthorRating AuthorRating = new AuthorRating()
             {
                 Rating = model.Rating,
                 UserId = userId,
@@ -26,28 +26,28 @@ namespace Library.Services
                 AuthorId = model.AuthorId
             };
 
-            await context.Ratings.AddAsync(bookRating);
+            await context.Ratings.AddAsync(AuthorRating);
             await context.SaveChangesAsync();
 
-            return bookRating.Id;
+            return AuthorRating.Id;
         }
 
-        public async Task<IndexBookRatingsUserViewModel> GetUserBookRatingsAsync(IndexBookRatingsUserViewModel model, string userId)
+        public async Task<IndexAuthorRatingsUserViewModel> GetUserAuthorRatingsAsync(IndexAuthorRatingsUserViewModel model, string userId)
         {
             if (model == null)
             {
-                model = new IndexBookRatingsUserViewModel(10);
+                model = new IndexAuthorRatingsUserViewModel(10);
             }
-            IQueryable<BookRating> reviewsData = context.Ratings.Where(x => x.UserId == userId);
+            IQueryable<AuthorRating> reviewsData = context.Ratings.Where(x => x.UserId == userId);
 
             model.ElementsCount = await reviewsData.CountAsync();
 
-            model.UserBookRatings = await reviewsData
+            model.UserAuthorRatings = await reviewsData
               .Skip((model.Page - 1) * model.ItemsPerPage)
               .Take(model.ItemsPerPage)
-              .Select(x => new IndexBookRatingViewModel()
+              .Select(x => new IndexAuthorRatingViewModel()
               {
-                  BookRatingId = x.Id,
+                  AuthorRatingId = x.Id,
                   AuthorName = x.Author.Name,
                   UserId = userId,
                   Rating = x.Rating,

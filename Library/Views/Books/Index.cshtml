@@ -1,9 +1,9 @@
-﻿@model IndexAuthorsViewModel
+﻿@model IndexBooksViewModel
 
 @{
     Dictionary<string, string> routs = new Dictionary<string, string>()
     {
-        {"filterByName", Model.FilterByName },
+        {"filterByName", Model.FilterByTitle },
         {"isAsc",Model.IsAsc.ToString()},
         {"itemsPerPage",Model.ItemsPerPage.ToString()}
     };
@@ -15,7 +15,7 @@
 <form asp-action="Index" method="get">
     <div class="input-group mb-3">
         <button type="submit" class="btn btn-outline-secondary">Search</button>
-        <input asp-for="FilterByName" type="text" class="form-control" placeholder="Name" aria-label="Search" aria-describedby="basic-addon2">
+        <input asp-for="FilterByTitle" type="text" class="form-control" placeholder="Title" aria-label="Search" aria-describedby="basic-addon2">
     </div>
 </form>
 <table class="table table-bordered table-striped table-hover">
@@ -28,26 +28,26 @@
                 }
                 <a asp-all-route-data="routs">Full name</a>
             </th>
-          Picture
+            Picture
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var author in Model.Authors)
+        @foreach (var book in Model.Books)
         {
             <tr>
                 <td>
-                    @author.Name
+                    @book.Title
                 </td>
                 <td>
-                    <img src="data:image/png;base64,@Html.DisplayFor(modelItem => author.Image)" width="300" height="200">
+                    <img src="data:image/png;base64,@Html.DisplayFor(modelItem => book.Image)" width="300" height="200">
                 </td>
                 <td>
-                    <a asp-action="Create" asp-controller="AuthorRatings" asp-route-authorId="@author.Id" class="btn btn-sm btn-secondary">AuthorRatings</a>
+                    <a asp-action="Create" asp-controller="BookRatings" asp-route-bookId="@book.Id" class="btn btn-sm btn-secondary">BookRatings</a>
                     @if (this.User.IsInRole("Admin"))
                     {
-                        <a  asp-action="Edit" asp-route-id="@author.Id" class="btn btn-sm btn-secondary">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@author.Id" class="btn btn-sm btn-danger">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-secondary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
                     }
                 </td>
             </tr>
