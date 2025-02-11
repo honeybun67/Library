@@ -1,4 +1,4 @@
-﻿@model Library.Data.Models.RecommendedBooks
+﻿@model EditRecommendedBookViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -17,12 +17,7 @@
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author" class="control-label"></label>
-                <input asp-for="Author" class="form-control" />
-                <span asp-validation-for="Author" class="text-danger"></span>
-            </div>
+            </div>          
             <div class="form-group">
                 <label asp-for="Rating" class="control-label"></label>
                 <input asp-for="Rating" class="form-control" />

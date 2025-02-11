@@ -77,7 +77,7 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var recommendedBooks = await _context.RecommendedBooks.FindAsync(id);
+            var recommendedBooks =await recommendedBookService.GetRecommendedBookToEditAsync(id);
             if (recommendedBooks == null)
             {
                 return NotFound();
@@ -90,34 +90,16 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Author,Rating")] RecommendedBooks recommendedBooks)
+        public async Task<IActionResult> Edit(EditRecommendedBookViewModel recommendedBookViewModel)
         {
-            if (id != recommendedBooks.Id)
-            {
-                return NotFound();
-            }
+           
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(recommendedBooks);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RecommendedBooksExists(recommendedBooks.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await recommendedBookService.UpdateRecBookAsync(recommendedBookViewModel);
                 return RedirectToAction(nameof(Index));
             }
-            return View(recommendedBooks);
+            return View(recommendedBookViewModel);
         }
 
         // GET: RecommendedBooks/Delete/5
