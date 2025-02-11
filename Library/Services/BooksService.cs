@@ -59,7 +59,6 @@ namespace Library.Services
 
             return book.Id;
 
-           
         }
         public async Task<IndexBooksViewModel> GetBooksAsync(IndexBooksViewModel model)
         {

@@ -1,8 +1,7 @@
-﻿namespace Library.Data.Models
+﻿namespace Library.ViewModels.ReccomendedBooks
 {
-    public class RecommendedBooks
+    public class CreateRecommendedBookViewModel
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string Author { get; set; }
         public int Rating { get; set; }

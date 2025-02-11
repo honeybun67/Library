@@ -14,7 +14,5 @@ namespace Library.Data.Models
 
         public string Image { get; set; }
 
-        public virtual ICollection<RecommendedBooks> BookRatings { get; set; } = new HashSet<RecommendedBooks>();
-
     }
 }

@@ -7,23 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library.Data;
 using Library.Data.Models;
+using Library.ViewModels.ReccomendedBooks;
+using Library.Services.Contracts;
 
 namespace Library.Controllers
 {
     public class RecommendedBooksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRecommendedBookService recommendedBookService;
 
-        public RecommendedBooksController(ApplicationDbContext context)
+        public RecommendedBooksController(ApplicationDbContext context,IRecommendedBookService recommendedBookService)
         {
             _context = context;
+            this.recommendedBookService = recommendedBookService;
         }
 
         // GET: RecommendedBooks
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.RecommendedBooks.Include(r => r.Book);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.RecommendedBooks.ToListAsync());
         }
 
         // GET: RecommendedBooks/Details/5
@@ -35,7 +38,6 @@ namespace Library.Controllers
             }
 
             var recommendedBooks = await _context.RecommendedBooks
-                .Include(r => r.Book)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (recommendedBooks == null)
             {
@@ -48,7 +50,6 @@ namespace Library.Controllers
         // GET: RecommendedBooks/Create
         public IActionResult Create()
         {
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id");
             return View();
         }
 
@@ -57,15 +58,13 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BookId")] RecommendedBooks recommendedBooks)
+        public async Task<IActionResult> Create(CreateRecommendedBookViewModel recommendedBooks)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(recommendedBooks);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await recommendedBookService.CreateRecommendedBookAsync(recommendedBooks);
+               return RedirectToAction(nameof(Index));
             }
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id", recommendedBooks.BookId);
             return View(recommendedBooks);
         }
 
@@ -82,7 +81,6 @@ namespace Library.Controllers
             {
                 return NotFound();
             }
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id", recommendedBooks.BookId);
             return View(recommendedBooks);
         }
 
@@ -91,7 +89,7 @@ namespace Library.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,BookId")] RecommendedBooks recommendedBooks)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Author,Rating")] RecommendedBooks recommendedBooks)
         {
             if (id != recommendedBooks.Id)
             {
@@ -118,7 +116,6 @@ namespace Library.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookId"] = new SelectList(_context.Books, "Id", "Id", recommendedBooks.BookId);
             return View(recommendedBooks);
         }
 
@@ -131,7 +128,6 @@ namespace Library.Controllers
             }
 
             var recommendedBooks = await _context.RecommendedBooks
-                .Include(r => r.Book)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (recommendedBooks == null)
             {

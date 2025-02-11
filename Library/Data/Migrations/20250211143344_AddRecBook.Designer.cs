@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250211123701_AddRecommednedBooks")]
-    partial class AddRecommednedBooks
+    [Migration("20250211143344_AddRecBook")]
+    partial class AddRecBook
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,13 +107,18 @@ namespace Library.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("BookId")
+                    b.Property<string>("Author")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookId");
 
                     b.ToTable("RecommendedBooks");
                 });
@@ -348,17 +353,6 @@ namespace Library.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Library.Data.Models.RecommendedBooks", b =>
-                {
-                    b.HasOne("Library.Data.Models.Book", "Book")
-                        .WithMany("BookRatings")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -413,11 +407,6 @@ namespace Library.Data.Migrations
             modelBuilder.Entity("Library.Data.Models.Author", b =>
                 {
                     b.Navigation("Ratings");
-                });
-
-            modelBuilder.Entity("Library.Data.Models.Book", b =>
-                {
-                    b.Navigation("BookRatings");
                 });
 
             modelBuilder.Entity("Library.Data.Models.User", b =>
