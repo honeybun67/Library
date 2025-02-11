@@ -10,6 +10,7 @@ using Library.Data.Models;
 using Library.ViewModels.Books;
 using Library.Services.Contracts;
 using Library.Services;
+using Library.ViewModels.Authors;
 
 namespace Library.Controllers
 {
@@ -137,6 +138,34 @@ namespace Library.Controllers
         private bool BookExists(string id)
         {
             return _context.Books.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> Seed()
+        {
+            IFormFile file = ConvertToIFormFile("C:\\Users\\HP\\Desktop\\Library\\Library\\Library\\wwwroot\\img\\defBook.jpg");
+            for (int i = 0; i < 40; i++)
+            {
+                CreateBookViewModel model = new CreateBookViewModel()
+                {
+                    Title = $"Book {i}",
+                    Description = $"Description for book {i}",
+                    ImageFile = file
+                };
+                await booksService.CreateBookAsync(model);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        public IFormFile ConvertToIFormFile(string filePath)
+        {
+            var fileInfo = new FileInfo(filePath);
+            var fileStream = new FileStream(filePath, FileMode.Open);
+
+            IFormFile formFile = new FormFile(fileStream, 0, fileInfo.Length, fileInfo.Name, fileInfo.Name)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/octet-stream"
+            };
+
+            return formFile;
         }
     }
 }

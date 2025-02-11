@@ -9,6 +9,8 @@ using Library.Data;
 using Library.Data.Models;
 using Library.ViewModels.ReccomendedBooks;
 using Library.Services.Contracts;
+using Library.Services;
+using Library.ViewModels.Books;
 
 namespace Library.Controllers
 {
@@ -138,6 +140,21 @@ namespace Library.Controllers
         private bool RecommendedBooksExists(string id)
         {
             return _context.RecommendedBooks.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> Seed()
+        {
+            
+            for (int i = 0; i < 40; i++)
+            {
+                CreateRecommendedBookViewModel model = new CreateRecommendedBookViewModel()
+                {
+                    Name = $"ReccommendedBook {i}",
+                    Author = $"Author {i}",
+                    Rating = 9
+                };
+                await recommendedBookService.CreateRecommendedBookAsync(model);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
