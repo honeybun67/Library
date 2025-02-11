@@ -19,7 +19,7 @@ namespace Library.Data
 
         public DbSet<Book> Books { get; set; }
 
-        public DbSet<BookRating> BookRatings { get; set; }
+        public DbSet<RecommendedBooks> RecommendedBooks { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

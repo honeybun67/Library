@@ -99,28 +99,20 @@ namespace Library.Data.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("Library.Data.Models.BookRating", b =>
+            modelBuilder.Entity("Library.Data.Models.RecommendedBooks", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AuthorId")
+                    b.Property<string>("BookId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("BookId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("Rating")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BookRatings");
+                    b.ToTable("RecommendedBooks");
                 });
 
             modelBuilder.Entity("Library.Data.Models.User", b =>
@@ -353,19 +345,15 @@ namespace Library.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Library.Data.Models.BookRating", b =>
+            modelBuilder.Entity("Library.Data.Models.RecommendedBooks", b =>
                 {
-                    b.HasOne("Library.Data.Models.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
+                    b.HasOne("Library.Data.Models.Book", "Book")
+                        .WithMany("BookRatings")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Library.Data.Models.Book", null)
-                        .WithMany("BookRatings")
-                        .HasForeignKey("BookId");
-
-                    b.Navigation("Author");
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

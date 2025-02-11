@@ -14,7 +14,7 @@ namespace Library.Data.Models
 
         public string Image { get; set; }
 
-        public virtual ICollection<BookRating> BookRatings { get; set; } = new HashSet<BookRating>();
+        public virtual ICollection<RecommendedBooks> BookRatings { get; set; } = new HashSet<RecommendedBooks>();
 
     }
 }

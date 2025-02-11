@@ -38,6 +38,7 @@ namespace Library
             builder.Services.AddTransient<IAuthorsService, AuthorService>();
             builder.Services.AddTransient<IAuthorRatingsService, AuthorRatingService>();
             builder.Services.AddTransient<IBooksService, BooksService>();
+            builder.Services.AddTransient<IRecommendetBookService, RecommendedBooks>();
 
             var app = builder.Build();
 
