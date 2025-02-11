@@ -63,7 +63,7 @@ namespace Library.Controllers
             if (ModelState.IsValid)
             {
                 await recommendedBookService.CreateRecommendedBookAsync(recommendedBooks);
-               return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             return View(recommendedBooks);
         }

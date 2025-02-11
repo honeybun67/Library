@@ -3,6 +3,7 @@ using Library.Data.Models;
 using Library.Services.Contracts;
 using Library.ViewModels.Books;
 using Library.ViewModels.ReccomendedBooks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Services
 {
@@ -29,6 +30,44 @@ namespace Library.Services
 
             return recBook.Id;
         }
-       
+        public async Task<IndexRecommendedBooksViewModel> GetBooksAsync(IndexRecommendedBooksViewModel model)
+        {
+            if (model == null)
+            {
+                model = new IndexRecommendedBooksViewModel(10);
+            }
+            IQueryable<RecommendedBooks> dataRecBooks = context.RecommendedBooks;
+
+            if (!string.IsNullOrWhiteSpace(model.FilterByName))
+            {
+                dataRecBooks = dataRecBooks.Where
+                    (x => x.Name.Contains(model.FilterByName));
+            }
+
+            if (model.IsAsc)
+            {
+                model.IsAsc = false;
+                dataRecBooks.OrderByDescending(x => x.Name);
+            }
+            else
+            {
+                model.IsAsc = true;
+                dataRecBooks.OrderBy(x => x.Name);
+            }
+            model.ElementsCount = await dataRecBooks.CountAsync();
+
+            model.RecommendedBooks = await dataRecBooks
+                .Skip((model.Page - 1) * model.ItemsPerPage)
+                .Take(model.ItemsPerPage)
+                .Select(x => new IndexRecommendedBookViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.  Name,
+                    Rating = x.Rating
+             
+                }).ToListAsync();
+
+            return model;
+        }
     }
 }
