@@ -5,6 +5,6 @@ namespace Library.Services.Contracts
     public interface IRecommendedBookService
     {
         public Task<string> CreateRecommendedBookAsync(CreateRecommendedBookViewModel model);
-        public Task<IndexRecommendedBooksViewModel> GetBooksAsync(IndexRecommendedBooksViewModel model);
+        public Task<IndexRecommendedBooksViewModel> GetRecBooksAsync(IndexRecommendedBooksViewModel model);
     }
 }

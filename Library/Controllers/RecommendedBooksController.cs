@@ -24,8 +24,9 @@ namespace Library.Controllers
         }
 
         // GET: RecommendedBooks
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(IndexRecommendedBooksViewModel recommendedBooks)
         {
+            recommendedBooks = await recommendedBookService.GetRecBooksAsync(recommendedBooks);
             return View(await _context.RecommendedBooks.ToListAsync());
         }
 

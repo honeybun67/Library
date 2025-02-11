@@ -30,7 +30,7 @@ namespace Library.Services
 
             return recBook.Id;
         }
-        public async Task<IndexRecommendedBooksViewModel> GetBooksAsync(IndexRecommendedBooksViewModel model)
+        public async Task<IndexRecommendedBooksViewModel> GetRecBooksAsync(IndexRecommendedBooksViewModel model)
         {
             if (model == null)
             {
