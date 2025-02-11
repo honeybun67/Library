@@ -2,7 +2,7 @@
 
 namespace Library.Services
 {
-    public class RecommendetBooksService: IRecommendetBookService
+    public class RecommendedBooksService: IRecommendedBooksService
     {
     }
 }
