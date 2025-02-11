@@ -56,8 +56,33 @@ namespace Library.Services
               }).ToListAsync();
 
             return model;
+        }
+        public async Task SeedReviewsAsync()
+        {
+            List<Author> author = context.Authors.Where(x => !x.Ratings.Any()).ToList();
+            foreach (var item in author)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    double rating = GenerateRandomNumber();
+                    User user = context.Users.FirstOrDefault();
+                    item.Ratings.Add(new AuthorRating()
+                    {
+                        Rating = rating,
+                        Review = $"Seed review {i} - {rating}",
+                        User = user
+                    });
+                }
+            }
+
+            context.Authors.UpdateRange(author);
+            await context.SaveChangesAsync();
 
         }
-
+        public double GenerateRandomNumber(double minValue = 0.0, double maxValue = 10.0)
+        {
+            Random random = new Random();
+            return random.NextDouble() * (maxValue - minValue) + minValue;
+        }
     }
 }

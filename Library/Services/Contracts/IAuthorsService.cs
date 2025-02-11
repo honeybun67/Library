@@ -8,5 +8,6 @@ namespace Library.Services.Contracts
         public Task<IndexAuthorsViewModel> GetAuthorsAsync(IndexAuthorsViewModel model);
         public Task<string> UpdateAuthorAsync(EditAuthorViewModel model);
         public Task<EditAuthorViewModel> GetAuthorToEditAsync(string authorId);
+      
     }
 }

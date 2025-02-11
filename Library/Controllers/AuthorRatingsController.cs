@@ -181,5 +181,10 @@ namespace Library.Controllers
         {
             return _context.Ratings.Any(e => e.Id == id);
         }
+        public async Task<IActionResult> Seed()
+        {
+            await AuthorRatingsService.SeedReviewsAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Library.Services.Contracts
         public Task<string> CreateAuthorRatingAsync(CreateAuthorRatingViewModel model, string userId);
 
         public Task<IndexAuthorRatingsUserViewModel> GetUserAuthorRatingsAsync(IndexAuthorRatingsUserViewModel model, string userId);
+        public Task SeedReviewsAsync();
     }
 }
