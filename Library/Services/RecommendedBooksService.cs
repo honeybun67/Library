@@ -15,7 +15,32 @@ namespace Library.Services
         {
             this.context = context;
         }
-        
+        public async Task<EditRecommendedBookViewModel> GetRecommendedBookToEditAsync(string recBookId)
+        {
+            RecommendedBooks? recbookModel = await context
+                .RecommendedBooks
+                .FindAsync(recBookId);
+
+            return new EditRecommendedBookViewModel()
+            {
+                Id = recBookId,
+                Name = recbookModel.Name,
+                Rating = recbookModel.Rating
+            };
+        }
+        public async Task<string> UpdateRecBookAsync(EditRecommendedBookViewModel model)
+        {
+            RecommendedBooks? recBook = await context
+                            .RecommendedBooks
+                            .FindAsync(model.Id);
+            recBook.Name = model.Name;
+            recBook.Rating = model.Rating;
+
+            context.RecommendedBooks.Update(recBook);
+            await context.SaveChangesAsync();
+
+            return recBook.Id;
+        }
 
         public async Task<string> CreateRecommendedBookAsync(CreateRecommendedBookViewModel model)
         {
