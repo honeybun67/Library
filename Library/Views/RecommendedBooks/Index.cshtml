@@ -42,7 +42,6 @@
                 </td>
                 
                 <td>
-                    <a asp-action="Edit" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-secondary">Edit</a>
                     @if (this.User.IsInRole("Admin"))
                     {
                         <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">Delete</a>
